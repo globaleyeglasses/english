@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+     <modules>
+        <Mgt_SerpEditor>
+            <active>false</active>
+            <codePool>community</codePool>
+        </Mgt_SerpEditor>
+     </modules>
+</config>
