@@ -2,6 +2,7 @@
 app/code/community/Find/
 app/code/community/Phoenix/
 app/code/core/
+app/etc/local.xml
 app/design/adminhtml/default/default/
 app/design/adminhtml/default/find/
 app/design/frontend/base/
