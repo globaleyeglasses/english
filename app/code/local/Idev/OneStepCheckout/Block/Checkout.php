@@ -413,10 +413,19 @@ class Idev_OneStepCheckout_Block_Checkout extends Mage_Checkout_Block_Onepage_Ab
                 // Trick to allow saving of
                 $this->getOnepage()->saveCheckoutMethod('register');
                 $this->getQuote()->setCustomerId(0);
-                $customerData= array_intersect($billing_data, $this->getQuote()->getBillingAddress()->getData());
-                $this->getQuote()->getCustomer()->addData($customerData);
-                foreach($customerData as $key => $value){
-                    $this->getQuote()->setData('customer_'.$key, $value);
+                $customerData = '';
+                $tmpBilling = $billing_data;
+
+                if(!empty($tmpBilling['street']) && is_array($tmpBilling['street'])){
+                    $tmpBilling ['street'] = '';
+                }
+                $customerData= array_intersect($tmpBilling, $this->getQuote()->getBillingAddress()->implodeStreetAddress()->getData());
+
+                if(!empty($customerData)){
+                    $this->getQuote()->getCustomer()->addData($customerData);
+                    foreach($customerData as $key => $value){
+                        $this->getQuote()->setData('customer_'.$key, $value);
+                    }
                 }
             }
 
@@ -614,29 +623,7 @@ class Idev_OneStepCheckout_Block_Checkout extends Mage_Checkout_Block_Onepage_Ab
         $payment = $this->getRequest()->getPost('payment', array());
         $paymentRedirect = false;
 
-        /**
-         * A fix for common one big form problem
-         * we rename the fields in template and iterate over subarrays
-         * to see if there's any values and set them to main scope
-         */
-        foreach($payment as $value){
-            if(is_array($value) && !empty($value)){
-                foreach($value as $key => $realValue){
-                    if(!empty($realValue)){
-                        $payment[$key]=$realValue;
-                    }
-                }
-            }
-        }
-
-        /**
-         * unset unnecessary fields
-         */
-        foreach ($payment as $key => $value){
-            if(is_array($value)){
-                unset($payment[$key]);
-            }
-        }
+        $payment = $this->filterPaymentData($payment);
 
         //echo '<pre>' . print_r($_POST,1) . '</pre>';
         //echo '<pre>' . print_r($payment,1) . '</pre>';
@@ -692,8 +679,8 @@ class Idev_OneStepCheckout_Block_Checkout extends Mage_Checkout_Block_Onepage_Ab
             }
 
             if($paymentRedirect && $paymentRedirect != '')  {
-                Header('Location: ' . $paymentRedirect);
-                die();
+                $response = Mage::app()->getResponse();
+                return $response->setRedirect($paymentRedirect);
             }
 
             if( $this->_isLoggedIn() )  {
@@ -856,29 +843,7 @@ class Idev_OneStepCheckout_Block_Checkout extends Mage_Checkout_Block_Onepage_Ab
         // Hack to fix weird Magento payment behaviour
         $payment = $this->getRequest()->getPost('payment', false);
         if($payment) {
-            /**
-             * A fix for common one big form problem
-             * we rename the fields in template and iterate over subarrays
-             * to see if there's any values and set them to main scope
-             */
-            foreach($payment as $value){
-                if(is_array($value) && !empty($value)){
-                    foreach($value as $key => $realValue){
-                        if(!empty($realValue)){
-                            $payment[$key]=$realValue;
-                        }
-                    }
-                }
-            }
-
-            /**
-             * unset unnecessary fields
-             */
-            foreach ($payment as $key => $value){
-                if(is_array($value)){
-                    unset($payment[$key]);
-                }
-            }
+            $payment = $this->filterPaymentData($payment);
             $this->getOnepage()->getQuote()->getPayment()->importData($payment);
 
             $ccSaveAllowedMethods = array('ccsave');
@@ -893,7 +858,9 @@ class Idev_OneStepCheckout_Block_Checkout extends Mage_Checkout_Block_Onepage_Ab
 
 
         try {
-            $this->getOnepage()->getQuote()->setTotalsCollectedFlag(false)->collectTotals();
+            if(!Mage::helper('customer')->isLoggedIn()){
+                $this->getOnepage()->getQuote()->setTotalsCollectedFlag(false)->collectTotals();
+            }
             $order = $this->getOnepage()->saveOrder();
         } catch(Exception $e)   {
             //need to activate
@@ -920,9 +887,41 @@ class Idev_OneStepCheckout_Block_Checkout extends Mage_Checkout_Block_Onepage_Ab
             $redirect = $this->getUrl('checkout/onepage/success');
             //$this->_redirect('checkout/onepage/success', array('_secure'=>true));
         }
+        $response = Mage::app()->getResponse();
+        return $response->setRedirect($redirect);
+    }
 
-        Header('Location: ' . $redirect);
-        exit();
+    /**
+     * A fix for common one big form problem
+     * we rename the fields in template and iterate over subarrays
+     * to see if there's any values and set them to main scope
+     * while try to preserve _data keys
+     *
+     * @param mixed $payment
+     * @return mixed
+     */
+    protected function filterPaymentData($payment){
+        if($payment){
+
+            foreach($payment as $key => $value){
+
+                if(!strstr($key, '_data') && is_array($value) && !empty($value)){
+                    foreach($value as $subkey => $realValue){
+                        if(!empty($realValue)){
+                            $payment[$subkey]=$realValue;
+                        }
+                    }
+                }
+            }
+
+            foreach ($payment as $key => $value){
+                if(!strstr($key, '_data') && is_array($value)){
+                    unset($payment[$key]);
+                }
+            }
+        }
+
+        return $payment;
     }
 
     public function getOnepage()

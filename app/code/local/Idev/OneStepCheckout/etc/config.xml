@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Idev_OneStepCheckout>
-            <version>4.0.7</version>
+            <version>4.0.8</version>
         </Idev_OneStepCheckout>
     </modules>
     <frontend>
@@ -241,7 +241,7 @@
             </feedback>
             <ajax_update>
                 <enable_ajax_save_billing>1</enable_ajax_save_billing>
-                <ajax_save_billing_fields>country,postcode,state/region</ajax_save_billing_fields>
+                <ajax_save_billing_fields>country,postcode</ajax_save_billing_fields>
                 <enable_update_payment_on_shipping>1</enable_update_payment_on_shipping>
             </ajax_update>
             <registration>
@@ -249,8 +249,8 @@
                 <registration_order_without_password>0</registration_order_without_password>
             </registration>
             <addressreview>
-                <billing_template><![CDATA[#{billing:firstname} #{billing:lastname}<br />#{billing:company}<br />#{billing:street1}<br />#{billing:street2}<br />#{billing:city},  #{billing:region}, #{billing:postcode}<br />#{billing:country_id}<br />T: #{billing:telephone} ]]></billing_template>
-                <shipping_template><![CDATA[#{shipping:firstname} #{shipping:lastname}<br />#{shipping:company}<br />#{shipping:street1}<br />#{shipping:street2}<br />#{shipping:city},  #{shipping:region}, #{shipping:postcode}<br />#{shipping:country_id}<br />T: #{shipping:telephone} ]]></shipping_template>
+                <billing_template><![CDATA[#{billing:firstname} #{billing:lastname}<br />#{billing:email}<br />#{billing:company}<br />#{billing:street1}<br />#{billing:street2}<br />#{billing:city},  #{billing:region}, #{billing:postcode}<br />#{billing:country_id}<br />T: #{billing:telephone} ]]></billing_template>
+                <shipping_template><![CDATA[#{shipping:firstname} #{shipping:lastname}<br />#{shipping:email}<br />#{shipping:street1}<br />#{shipping:street2}<br />#{shipping:city},  #{shipping:region}, #{shipping:postcode}<br />#{shipping:country_id}<br />T: #{shipping:telephone} ]]></shipping_template>
             </addressreview>
         </onestepcheckout>
     </default>

@@ -491,6 +491,7 @@ class Idev_OneStepCheckout_Helper_Checkout extends Mage_Core_Helper_Abstract
             'co.uk',
             'com.au',
             'com.br',
+            'com.sg'
         );
 
         $count = count($temp);

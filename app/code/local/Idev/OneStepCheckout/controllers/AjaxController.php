@@ -485,7 +485,9 @@ class Idev_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_Act
            $helper->saveShippingMethod($shipping_method);
         }
 
-        $this->_getOnepage()->getQuote()->setTotalsCollectedFlag(false)->collectTotals();
+        if(!Mage::helper('customer')->isLoggedIn()){
+            $this->_getOnepage()->getQuote()->setTotalsCollectedFlag(false)->collectTotals();
+        }
 
         $this->loadLayout(false);
 

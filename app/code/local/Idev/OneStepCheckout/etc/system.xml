@@ -826,7 +826,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>You can use following variables: #{shipping:firstname}, #{shipping:lastname}, #{shipping:telephone}, #{shipping:street1}, #{shipping:street2}, #{shipping:street3}, #{shipping:city}, #{shipping:region}, #{shipping:postcode}, #{shipping:company}, #{shipping:fax}, #{shipping:country_id}</comment>
+                            <comment>You can use following variables: #{shipping:firstname}, #{shipping:lastname}, #{shipping:email}, #{shipping:telephone}, #{shipping:street1}, #{shipping:street2}, #{shipping:street3}, #{shipping:city}, #{shipping:region}, #{shipping:postcode}, #{shipping:company}, #{shipping:fax}, #{shipping:country_id}</comment>
                         </shipping_template>
                     </fields>
                 </addressreview>
