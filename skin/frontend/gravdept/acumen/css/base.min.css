@@ -881,7 +881,7 @@ a.button:hover { color:#FFF; }
 .product-grid td { position:relative; max-width:210px; padding:0 30px 30px 0; vertical-align:top; }
 .product-grid td:last-child { padding-right:0; }
 
-.product-grid h2 { margin-bottom:3px; font-size:15px; line-height:1.2; }
+.product-grid h2 { margin-bottom:3px; font-size:18px; line-height:1.6; }
 .product-grid .product-image { position:relative; margin-bottom:10px; }
 .product-grid .product-image img { width:200px; height:200px; }
 
@@ -1843,7 +1843,7 @@ body.sales-order-print table { margin-bottom:30px; }
 .product-slider.cols_4 .slides-container > div
 	{ width:930px; }  /* 4 columns */
 
-.product-slider h2 { margin-left:60px; }
+.product-slider h2 { margin-left:370px; }
 .product-slider .slides-controls { position:absolute; left:0; top:0; }
 
 .product-slider a.next,
